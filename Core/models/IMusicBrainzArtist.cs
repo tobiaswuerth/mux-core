@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface IMusicBrainzArtist
     {
@@ -10,10 +9,5 @@ namespace ch.wuerth.tobias.mux.Core.definitions.models
         String Disambiguation { get; set; }
         String Name { get; set; }
         String SortName { get; set; }
-
-        // references
-
-        IList<IMusicBrainzAlias> Aliases { get; set; }
-        IList<IMusicBrainzArtistCredit> Credits { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface ITrack
     {
@@ -13,9 +12,5 @@ namespace ch.wuerth.tobias.mux.Core.definitions.models
         DateTime? LastAcoustIdApiCall { get; set; }
         DateTime? LastFingerprintCalculation { get; set; }
         String Path { get; set; }
-
-        // references 
-
-        IList<IAcoustIdResult> AcoustIdResults { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface IMusicBrainzTag
     {
@@ -9,9 +8,5 @@ namespace ch.wuerth.tobias.mux.Core.definitions.models
         String UniqueHash { get; set; }
         Int32 Count { get; set; }
         String Name { get; set; }
-
-        // references
-
-        IList<IMusicBrainzRecord> Records { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface IMusicBrainzTextRepresentation
     {
@@ -9,9 +8,5 @@ namespace ch.wuerth.tobias.mux.Core.definitions.models
         String UniqueHash { get; set; }
         String Language { get; set; }
         String Script { get; set; }
-
-        // references
-
-        IList<IMusicBrainzRelease> Releases { get; set; }
     }
 }

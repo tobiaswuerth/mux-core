@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface IMusicBrainzRelease
     {
@@ -17,13 +16,5 @@ namespace ch.wuerth.tobias.mux.Core.definitions.models
         String Status { get; set; }
         String StatusId { get; set; }
         String Title { get; set; }
-
-        // references
-
-        IList<IMusicBrainzAlias> Aliases { get; set; }
-        IList<IMusicBrainzArtistCredit> ArtistCredit { get; set; }
-        IList<IMusicBrainzReleaseEvent> ReleaseEvents { get; set; }
-        IMusicBrainzTextRepresentation TextRepresentation { get; set; }
-        IList<IMusicBrainzRecord> MusicBrainzRecords { get; set; }
     }
 }

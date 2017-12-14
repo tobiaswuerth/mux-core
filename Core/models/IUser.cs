@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface IUser
     {

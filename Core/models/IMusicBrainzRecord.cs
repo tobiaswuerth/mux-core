@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ch.wuerth.tobias.mux.Core.definitions.models
+namespace ch.wuerth.tobias.mux.Core.models
 {
     public interface IMusicBrainzRecord
     {
@@ -13,13 +12,5 @@ namespace ch.wuerth.tobias.mux.Core.definitions.models
         String MusicbrainzId { get; set; }
         String Title { get; set; }
         Boolean? Video { get; set; }
-
-        // references 
-
-        IList<IAcoustId> AcoustIds { get; set; }
-        IList<IMusicBrainzAlias> Aliases { get; set; }
-        IList<IMusicBrainzArtistCredit> ArtistCredit { get; set; }
-        IList<IMusicBrainzRelease> Releases { get; set; }
-        IList<IMusicBrainzTag> Tags { get; set; }
     }
 }
