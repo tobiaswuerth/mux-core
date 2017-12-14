@@ -3,9 +3,9 @@ using System.IO;
 using ch.wuerth.tobias.mux.Core.events;
 using global::ch.wuerth.tobias.mux.Core.global;
 
-namespace ch.wuerth.tobias.mux.Core.logging
+namespace ch.wuerth.tobias.mux.Core.logging.information
 {
-    public class InformationFileLogger : Logger<String>
+    public class InformationFileLogger : InformationLogger
     {
         public static String LogFilePath
         {

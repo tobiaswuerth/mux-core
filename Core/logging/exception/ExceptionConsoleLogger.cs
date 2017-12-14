@@ -1,19 +1,12 @@
 ﻿using System;
-using System.IO;
 using ch.wuerth.tobias.mux.Core.events;
 using ch.wuerth.tobias.mux.Core.processor;
-using global::ch.wuerth.tobias.mux.Core.global;
 
-namespace ch.wuerth.tobias.mux.Core.logging
+namespace ch.wuerth.tobias.mux.Core.logging.exception
 {
-    public class ExceptionFileLogger : Logger<Exception>
+    public class ExceptionConsoleLogger : ExceptionLogger
     {
         private readonly IProcessor<Exception, String> _processor = new ExceptionProcessor();
-
-        public static String LogFilePath
-        {
-            get { return Path.Combine(Location.LogsDirectoryPath, @"\mux_log_exceptions.log"); }
-        }
 
         public override Boolean Log(Exception obj, ICallback<Exception> onError = null)
         {
@@ -25,7 +18,7 @@ namespace ch.wuerth.tobias.mux.Core.logging
 
             try
             {
-                File.AppendAllText(LogFilePath, $"{DateTimePrefix} {res.output}");
+                Console.WriteLine($"{DateTimePrefix} {res.output}");
                 return true;
             }
             catch (Exception ex)

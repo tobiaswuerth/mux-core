@@ -1,9 +1,9 @@
 ﻿using System;
 using ch.wuerth.tobias.mux.Core.events;
 
-namespace ch.wuerth.tobias.mux.Core.logging
+namespace ch.wuerth.tobias.mux.Core.logging.information
 {
-    public class InformationConsoleLogger : Logger<String>
+    public class InformationConsoleLogger : InformationLogger
     {
         public override Boolean Log(String obj, ICallback<Exception> onError = null)
         {
