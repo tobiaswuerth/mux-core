@@ -1,5 +1,6 @@
 ﻿using System;
 using ch.wuerth.tobias.mux.Core.events;
+using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.processor;
 
 namespace ch.wuerth.tobias.mux.Core.logging.exception
@@ -8,24 +9,23 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
     {
         private readonly IProcessor<Exception, String> _processor = new ExceptionProcessor();
 
-        public override Boolean Log(Exception obj, ICallback<Exception> onError = null)
+        public ExceptionConsoleLogger(ICallback<Exception> exceptionCallback) : base(exceptionCallback) { }
+
+        protected override Boolean Process(Exception obj)
         {
-            (String output, Boolean success) res = _processor.Handle(obj, onError);
-            if (!res.success)
+            if (null == obj)
             {
-                return false;
+                throw new ArgumentNullException(nameof(obj));
             }
 
-            try
+            (String output, Boolean success) res = _processor.Handle(obj, new LoggerBundle {Exception = this});
+            if (!res.success)
             {
-                Console.WriteLine($"{DateTimePrefix} {res.output}");
-                return true;
+                throw new ProcessAbortedException();
             }
-            catch (Exception ex)
-            {
-                onError?.Push(ex);
-                return false;
-            }
+
+            Console.WriteLine($"{DateTimePrefix} {res.output}");
+            return true;
         }
     }
 }

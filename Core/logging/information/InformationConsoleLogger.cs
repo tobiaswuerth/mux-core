@@ -5,18 +5,17 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
 {
     public class InformationConsoleLogger : InformationLogger
     {
-        public override Boolean Log(String obj, ICallback<Exception> onError = null)
+        public InformationConsoleLogger(ICallback<Exception> exceptionCallback) : base(exceptionCallback) { }
+
+        protected override Boolean Process(String obj)
         {
-            try
+            if (null == obj)
             {
-                Console.WriteLine($"{DateTimePrefix} {obj}");
-                return true;
+                throw new ArgumentNullException(nameof(obj));
             }
-            catch (Exception ex)
-            {
-                onError?.Push(ex);
-                return false;
-            }
+
+            Console.WriteLine($"{DateTimePrefix} {obj}");
+            return true;
         }
     }
 }

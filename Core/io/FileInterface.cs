@@ -1,31 +1,31 @@
 using System;
 using System.IO;
-using ch.wuerth.tobias.mux.Core.events;
 using ch.wuerth.tobias.mux.Core.exceptions;
+using ch.wuerth.tobias.mux.Core.logging;
 using Newtonsoft.Json;
 
 namespace ch.wuerth.tobias.mux.Core.io
 {
     public static class FileInterface
     {
-        public static Boolean Save<T>(T obj, String path, Boolean doOverride = false,
-            ICallback<Exception> onException = null) where T : class
+        public static Boolean Save<T>(T obj, String path, Boolean doOverride = false, LoggerBundle logger = null)
+            where T : class
         {
             if (null == obj)
             {
-                onException?.Push(new ArgumentNullException(nameof(obj)));
+                logger?.Exception?.Log(new ArgumentNullException(nameof(obj)));
                 return false;
             }
 
             if (null == path)
             {
-                onException?.Push(new ArgumentNullException(nameof(path)));
+                logger?.Exception?.Log(new ArgumentNullException(nameof(path)));
                 return false;
             }
 
             if (File.Exists(path) && !doOverride)
             {
-                onException?.Push(new PathOccupiedException());
+                logger?.Exception?.Log(new PathOccupiedException());
                 return false;
             }
 
@@ -37,23 +37,22 @@ namespace ch.wuerth.tobias.mux.Core.io
             }
             catch (Exception ex)
             {
-                onException?.Push(ex);
+                logger?.Exception?.Log(ex);
                 return false;
             }
         }
 
-        public static (T output, Boolean success) Read<T>(String path, ICallback<Exception> onException = null)
-            where T : class
+        public static (T output, Boolean success) Read<T>(String path, LoggerBundle logger = null) where T : class
         {
             if (null == path)
             {
-                onException?.Push(new ArgumentNullException(nameof(path)));
+                logger?.Exception?.Log(new ArgumentNullException(nameof(path)));
                 return (null, false);
             }
 
             if (!File.Exists(path))
             {
-                onException?.Push(new FileNotFoundException());
+                logger?.Exception?.Log(new FileNotFoundException());
                 return (null, false);
             }
 
@@ -65,7 +64,7 @@ namespace ch.wuerth.tobias.mux.Core.io
             }
             catch (Exception ex)
             {
-                onException?.Push(ex);
+                logger?.Exception?.Log(ex);
                 return (null, false);
             }
         }

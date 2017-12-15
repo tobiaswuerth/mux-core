@@ -5,11 +5,31 @@ namespace ch.wuerth.tobias.mux.Core.logging
 {
     public abstract class Logger<T>
     {
-        public static String DateTimePrefix
+        protected readonly ICallback<Exception> ExceptionCallback;
+
+        protected Logger(ICallback<Exception> exceptionCallback)
         {
-            get { return $"[{DateTime.Now:d T}]"; }
+            ExceptionCallback = exceptionCallback;
         }
 
-        public abstract Boolean Log(T obj, ICallback<Exception> onError = null);
+        protected static String DateTimePrefix
+        {
+            get { return $"[{DateTime.Now:s}]"; }
+        }
+
+        public Boolean Log(T obj)
+        {
+            try
+            {
+                return Process(obj);
+            }
+            catch (Exception ex)
+            {
+                ExceptionCallback?.Push(ex);
+                return false;
+            }
+        }
+
+        protected abstract Boolean Process(T obj);
     }
 }

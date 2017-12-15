@@ -7,29 +7,22 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
 {
     public class InformationFileLogger : InformationLogger
     {
-        public static String LogFilePath
+        public InformationFileLogger(ICallback<Exception> exceptionCallback) : base(exceptionCallback) { }
+
+        private static String LogFilePath
         {
             get { return Path.Combine(Location.LogsDirectoryPath, @"\mux_log_information.log"); }
         }
 
-        public override Boolean Log(String obj, ICallback<Exception> onError = null)
+        protected override Boolean Process(String obj)
         {
             if (null == obj)
             {
-                onError?.Push(new ArgumentNullException(nameof(obj)));
-                return false;
+                throw new ArgumentNullException(nameof(obj));
             }
 
-            try
-            {
-                File.AppendAllText(LogFilePath, $"{DateTimePrefix} {obj}");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                onError?.Push(ex);
-                return false;
-            }
+            File.AppendAllText(LogFilePath, $"{DateTimePrefix} {obj}");
+            return true;
         }
     }
 }
