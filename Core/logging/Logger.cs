@@ -5,11 +5,11 @@ namespace ch.wuerth.tobias.mux.Core.logging
 {
     public abstract class Logger<T>
     {
-        protected readonly ICallback<Exception> ExceptionCallback;
+        private readonly ICallback<Exception> _exceptionCallback;
 
         protected Logger(ICallback<Exception> exceptionCallback)
         {
-            ExceptionCallback = exceptionCallback;
+            _exceptionCallback = exceptionCallback;
         }
 
         protected static String DateTimePrefix
@@ -25,7 +25,7 @@ namespace ch.wuerth.tobias.mux.Core.logging
             }
             catch (Exception ex)
             {
-                ExceptionCallback?.Push(ex);
+                _exceptionCallback?.Push(ex);
                 return false;
             }
         }
