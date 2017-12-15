@@ -10,8 +10,7 @@ namespace ch.wuerth.tobias.mux.Core.processor
         {
             if (null == input)
             {
-                Exception ex = new ArgumentNullException(nameof(input));
-                logger?.Exception?.Log(ex);
+                logger?.Exception?.Log(new ArgumentNullException(nameof(input)));
                 return (null, false);
             }
 
