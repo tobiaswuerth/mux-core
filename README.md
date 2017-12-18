@@ -2,4 +2,4 @@
 
 # mux-core
 
-Available as [Nuget Package](https://www.nuget.org/packages/ch.wuerth.tobias.mux.Core/)
+Available as [NuGet Package](https://www.nuget.org/packages/ch.wuerth.tobias.mux.Core/)
