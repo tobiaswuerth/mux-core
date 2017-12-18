@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.logging;
 
 namespace ch.wuerth.tobias.mux.Core.plugin
 {
     public abstract class PluginBase
     {
-        private readonly LoggerBundle _logger;
-        public Boolean IsInitialized { get; set; }
-
         protected PluginBase(LoggerBundle logger = null)
         {
-            _logger = logger;
+            Logger = logger;
         }
+
+        private Boolean IsInitialized { get; set; }
+
+        protected LoggerBundle Logger { get; }
 
         public Boolean Initialize(PluginConfigurator configurator)
         {
@@ -24,12 +24,26 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             }
             catch (Exception ex)
             {
-                _logger?.Exception?.Log(ex);
+                Logger?.Exception?.Log(ex);
             }
 
             return IsInitialized;
         }
 
+        public void Work(params String[] args)
+        {
+            if (!IsInitialized)
+            {
+                throw new NotInitializedException();
+            }
+
+            OnProcessStarted();
+            Process(args);
+            OnProcessStopped();
+        }
+
+        protected virtual void OnProcessStarted() { }
+        protected virtual void OnProcessStopped() { }
         protected abstract void ConfigurePlugin(PluginConfigurator configurator);
         protected abstract void Process(params String[] args);
     }
