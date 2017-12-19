@@ -30,7 +30,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             return IsInitialized;
         }
 
-        public void Work(params String[] args)
+        public void Work(String[] args)
         {
             if (!IsInitialized)
             {
@@ -42,9 +42,17 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             OnProcessStopped();
         }
 
-        protected virtual void OnProcessStarted() { }
-        protected virtual void OnProcessStopped() { }
+        protected virtual void OnProcessStarted()
+        {
+            Logger?.Information?.Log("A new process has been started.");
+        }
+
+        protected virtual void OnProcessStopped()
+        {
+            Logger?.Information?.Log("A process has been stopped.");
+        }
+
         protected abstract void ConfigurePlugin(PluginConfigurator configurator);
-        protected abstract void Process(params String[] args);
+        protected abstract void Process(String[] args);
     }
 }

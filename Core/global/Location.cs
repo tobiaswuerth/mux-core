@@ -14,5 +14,10 @@ namespace ch.wuerth.tobias.mux.Core.global
         {
             get { return Path.Combine(ApplicationDataDirectoryPath, @"\logs\"); }
         }
+
+        public static String PluginsDirectoryPath
+        {
+            get { return Path.Combine(ApplicationDataDirectoryPath, @"\plugins\"); }
+        }
     }
 }
