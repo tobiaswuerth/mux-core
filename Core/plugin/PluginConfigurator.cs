@@ -8,7 +8,13 @@ namespace ch.wuerth.tobias.mux.Core.plugin
 
         public PluginConfigurator RegisterName(String name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            String value = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException($"{nameof(name)} cannot be empty");
+            }
+
+            Name = value;
             return this;
         }
     }
