@@ -6,7 +6,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
 {
     public abstract class PluginBase
     {
-        protected PluginBase(LoggerBundle logger = null)
+        protected PluginBase(LoggerBundle logger)
         {
             Logger = logger;
         }

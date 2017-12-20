@@ -6,7 +6,7 @@ namespace ch.wuerth.tobias.mux.Core.processor
 {
     public class DateTimeStringProcessor : IProcessor<String, DateTime?>
     {
-        public (DateTime? output, Boolean success) Handle(String input, LoggerBundle logger = null)
+        public (DateTime? output, Boolean success) Handle(String input, LoggerBundle logger)
         {
             if (DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None,
                 out DateTime dt1))

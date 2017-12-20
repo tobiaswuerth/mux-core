@@ -6,7 +6,7 @@ namespace ch.wuerth.tobias.mux.Core.processor
 {
     public class ExceptionProcessor : IProcessor<Exception, String>
     {
-        public (String output, Boolean success) Handle(Exception input, LoggerBundle logger = null)
+        public (String output, Boolean success) Handle(Exception input, LoggerBundle logger)
         {
             if (null == input)
             {

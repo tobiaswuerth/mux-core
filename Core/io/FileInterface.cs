@@ -32,6 +32,11 @@ namespace ch.wuerth.tobias.mux.Core.io
             try
             {
                 String text = JsonConvert.SerializeObject(obj);
+                String pathRoot = Path.GetDirectoryName(path);
+                if (!Directory.Exists(pathRoot))
+                {
+                    Directory.CreateDirectory(pathRoot);
+                }
                 File.WriteAllText(path, text);
                 return true;
             }
