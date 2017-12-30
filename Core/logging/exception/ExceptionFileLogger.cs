@@ -15,7 +15,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
 
         public static String LogFilePath
         {
-            get { return Path.Combine(Location.LogsDirectoryPath, @"\mux_log_exceptions.log"); }
+            get { return Path.Combine(Location.LogsDirectoryPath, $"mux_log_exception-{DateTime.Now.Ticks}.log"); }
         }
 
         protected override Boolean Process(Exception obj)
@@ -31,7 +31,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
                 throw new ProcessAbortedException();
             }
 
-            File.AppendAllText(LogFilePath, $"{DateTimePrefix} {res.output}");
+            File.AppendAllText(LogFilePath, $"{DateTimePrefix} {res.output}{Environment.NewLine}");
             return true;
         }
     }

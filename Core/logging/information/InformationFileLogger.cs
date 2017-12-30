@@ -11,7 +11,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
 
         private static String LogFilePath
         {
-            get { return Path.Combine(Location.LogsDirectoryPath, @"\mux_log_information.log"); }
+            get { return Path.Combine(Location.LogsDirectoryPath, $"mux_log_information-{DateTime.Now.Ticks}.log"); }
         }
 
         protected override Boolean Process(String obj)
@@ -21,7 +21,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            File.AppendAllText(LogFilePath, $"{DateTimePrefix} {obj}");
+            File.AppendAllText(LogFilePath, $"{DateTimePrefix} {obj}{Environment.NewLine}");
             return true;
         }
     }
