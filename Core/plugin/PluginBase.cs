@@ -15,9 +15,9 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             Logger = logger;
         }
 
-        private String Name { get; }
+        public String Name { get; }
 
-        private Boolean IsInitialized { get; set; }
+        public Boolean IsInitialized { get; set; }
 
         protected LoggerBundle Logger { get; }
 
