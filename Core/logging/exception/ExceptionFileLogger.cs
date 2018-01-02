@@ -15,7 +15,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
 
         public static String LogFilePath
         {
-            get { return Path.Combine(Location.LogsDirectoryPath, $"mux_log_exception-{DateTime.Now.Ticks}.log"); }
+            get { return Path.Combine(Location.LogsDirectoryPath, $"mux_log_exception-{DateTime.Now:yyyyMMdd}.log"); }
         }
 
         protected override Boolean Process(Exception obj)
