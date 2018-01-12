@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ch.wuerth.tobias.mux.Core.events;
 using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.processor;
@@ -24,7 +25,13 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
                 throw new ProcessAbortedException();
             }
 
-            Console.WriteLine($"{DateTimePrefix} {res.output}");
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"An exception occurred{Environment.NewLine}");
+            sb.Append($"##### EXCEPTION BEGIN #####{Environment.NewLine}");
+            sb.Append(res.output);
+            sb.Append("###### EXCEPTION END ######");
+
+            Console.WriteLine($"{DateTimePrefix} {sb}");
             return true;
         }
     }
