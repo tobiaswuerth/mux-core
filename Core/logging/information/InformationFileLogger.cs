@@ -11,7 +11,10 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
 
         private static String LogFilePath
         {
-            get { return Path.Combine(Location.LogsDirectoryPath, $"mux_log_information-{DateTime.Now:yyyyMMdd}.log"); }
+            get
+            {
+                return Path.Combine(Location.LogsDirectoryPath, $"mux_log_information-{DateTime.Now:yyyyMMdd}.log");
+            }
         }
 
         protected override Boolean Process(String obj)

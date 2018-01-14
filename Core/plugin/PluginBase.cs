@@ -3,7 +3,7 @@ using System.IO;
 using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.io;
 using ch.wuerth.tobias.mux.Core.logging;
-using ch.wuerth.tobias.mux.Core.global;
+using global::ch.wuerth.tobias.mux.Core.global;
 
 namespace ch.wuerth.tobias.mux.Core.plugin
 {
@@ -66,8 +66,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
                 Logger?.Information?.Log($"File '{configPath}' not found. Trying to create it...");
                 FileInterface.Save(Activator.CreateInstance<T>(), configPath, false, Logger);
                 Logger?.Information?.Log($"Successfully created file '{configPath}'");
-                Logger?.Information?.Log(
-                    $"Please adjust the newly created file '{configPath}' as needed and run again");
+                Logger?.Information?.Log($"Please adjust the newly created file '{configPath}' as needed and run again");
                 throw new ProcessAbortedException();
             }
 
