@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.io;
@@ -9,6 +10,8 @@ namespace ch.wuerth.tobias.mux.Core.plugin
 {
     public abstract class PluginBase
     {
+        private readonly Dictionary<String, Action> _actions = new Dictionary<String, Action>();
+
         protected PluginBase(String pluginName, LoggerBundle logger)
         {
             Name = pluginName;
@@ -20,6 +23,44 @@ namespace ch.wuerth.tobias.mux.Core.plugin
         public Boolean IsInitialized { get; set; }
 
         protected LoggerBundle Logger { get; }
+
+        public void RegisterAction(String key, Action action)
+        {
+            if (action == null)
+            {
+                Logger?.Exception?.Log(new ArgumentNullException(nameof(action)));
+            }
+
+            if (key == null)
+            {
+                Logger?.Exception?.Log(new ArgumentNullException(nameof(key)));
+                return;
+            }
+
+            _actions[key] = action ?? throw new ArgumentNullException(nameof(action));
+        }
+
+        public void TriggerAction(List<String> keys)
+        {
+            keys.ForEach(TriggerAction);
+        }
+
+        public void TriggerAction(String key)
+        {
+            if (key == null)
+            {
+                Logger?.Exception?.Log(new ArgumentNullException(nameof(key)));
+                return;
+            }
+
+            if (!_actions.ContainsKey(key))
+            {
+                Logger?.Exception?.Log(new KeyNotFoundException($"No action with name '{key}' found"));
+                return;
+            }
+
+            _actions[key].Invoke();
+        }
 
         public Boolean Initialize()
         {
