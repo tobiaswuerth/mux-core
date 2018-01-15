@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.io;
 using ch.wuerth.tobias.mux.Core.logging;
@@ -40,7 +41,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             _actions[key] = action ?? throw new ArgumentNullException(nameof(action));
         }
 
-        public void TriggerAction(List<String> keys)
+        public void TriggerActions(List<String> keys)
         {
             keys.ForEach(TriggerAction);
         }
@@ -67,6 +68,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             try
             {
                 OnInitialize();
+                RegisterDefaultActions();
                 IsInitialized = true;
             }
             catch (Exception ex)
@@ -75,6 +77,14 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             }
 
             return IsInitialized;
+        }
+
+        private void RegisterDefaultActions()
+        {
+            RegisterAction("help", OnActionHelp);
+            RegisterAction("-help", OnActionHelp);
+            RegisterAction("--help", OnActionHelp);
+            RegisterAction("/help", OnActionHelp);
         }
 
         public void Work(String[] args)
@@ -97,6 +107,18 @@ namespace ch.wuerth.tobias.mux.Core.plugin
         protected virtual void OnProcessStopping()
         {
             Logger?.Information?.Log($"A process of plugin '{Name}' is stopping");
+        }
+
+        private void OnActionHelp()
+        {
+            StringBuilder sb = new StringBuilder();
+            OnActionHelp(sb);
+            Logger?.Information?.Log(sb.ToString());
+        }
+
+        protected virtual void OnActionHelp(StringBuilder sb)
+        {
+            sb.Append($"Plugin '{Name}' has no specific help message defined");
         }
 
         protected T RequestConfig<T>() where T : class
