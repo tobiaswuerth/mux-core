@@ -7,17 +7,26 @@ namespace ch.wuerth.tobias.mux.Core.global
     {
         public static String ApplicationDataDirectoryPath
         {
-            get { return Path.Combine(Environment.CurrentDirectory, "mux_appdata"); }
+            get
+            {
+                return Path.Combine(Environment.CurrentDirectory, "mux_appdata");
+            }
         }
 
         public static String LogsDirectoryPath
         {
-            get { return Path.Combine(ApplicationDataDirectoryPath, "logs"); }
+            get
+            {
+                return Path.Combine(ApplicationDataDirectoryPath, "logs");
+            }
         }
 
         public static String PluginsDirectoryPath
         {
-            get { return Path.Combine(ApplicationDataDirectoryPath, "plugins"); }
+            get
+            {
+                return Path.Combine(ApplicationDataDirectoryPath, "plugins");
+            }
         }
     }
 }

@@ -8,8 +8,7 @@ namespace ch.wuerth.tobias.mux.Core.io
 {
     public static class FileInterface
     {
-        public static Boolean Save<T>(T obj, String path, Boolean doOverride = false, LoggerBundle logger = null)
-            where T : class
+        public static Boolean Save<T>(T obj, String path, Boolean doOverride = false, LoggerBundle logger = null) where T : class
         {
             if (null == obj)
             {

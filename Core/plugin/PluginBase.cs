@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using ch.wuerth.tobias.mux.Core.exceptions;
 using ch.wuerth.tobias.mux.Core.io;
 using ch.wuerth.tobias.mux.Core.logging;
-using ch.wuerth.tobias.mux.Core.global;
+using global::ch.wuerth.tobias.mux.Core.global;
 
 namespace ch.wuerth.tobias.mux.Core.plugin
 {
     public abstract class PluginBase
     {
+        private readonly Dictionary<String, Action> _actions = new Dictionary<String, Action>();
+
         protected PluginBase(String pluginName, LoggerBundle logger)
         {
             Name = pluginName;
@@ -21,11 +25,50 @@ namespace ch.wuerth.tobias.mux.Core.plugin
 
         protected LoggerBundle Logger { get; }
 
+        public void RegisterAction(String key, Action action)
+        {
+            if (action == null)
+            {
+                Logger?.Exception?.Log(new ArgumentNullException(nameof(action)));
+            }
+
+            if (key == null)
+            {
+                Logger?.Exception?.Log(new ArgumentNullException(nameof(key)));
+                return;
+            }
+
+            _actions[key] = action ?? throw new ArgumentNullException(nameof(action));
+        }
+
+        public void TriggerActions(List<String> keys)
+        {
+            keys.ForEach(TriggerAction);
+        }
+
+        public void TriggerAction(String key)
+        {
+            if (key == null)
+            {
+                Logger?.Exception?.Log(new ArgumentNullException(nameof(key)));
+                return;
+            }
+
+            if (!_actions.ContainsKey(key))
+            {
+                Logger?.Exception?.Log(new KeyNotFoundException($"No action with name '{key}' found"));
+                return;
+            }
+
+            _actions[key].Invoke();
+        }
+
         public Boolean Initialize()
         {
             try
             {
                 OnInitialize();
+                RegisterDefaultActions();
                 IsInitialized = true;
             }
             catch (Exception ex)
@@ -34,6 +77,14 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             }
 
             return IsInitialized;
+        }
+
+        private void RegisterDefaultActions()
+        {
+            RegisterAction("help", OnActionHelp);
+            RegisterAction("-help", OnActionHelp);
+            RegisterAction("--help", OnActionHelp);
+            RegisterAction("/help", OnActionHelp);
         }
 
         public void Work(String[] args)
@@ -58,6 +109,18 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             Logger?.Information?.Log($"A process of plugin '{Name}' is stopping");
         }
 
+        private void OnActionHelp()
+        {
+            StringBuilder sb = new StringBuilder();
+            OnActionHelp(sb);
+            Logger?.Information?.Log(sb.ToString());
+        }
+
+        protected virtual void OnActionHelp(StringBuilder sb)
+        {
+            sb.Append($"Plugin '{Name}' has no specific help message defined");
+        }
+
         protected T RequestConfig<T>() where T : class
         {
             String configPath = Path.Combine(Location.ApplicationDataDirectoryPath, $"mux_config_plugin_{Name}.json");
@@ -66,8 +129,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
                 Logger?.Information?.Log($"File '{configPath}' not found. Trying to create it...");
                 FileInterface.Save(Activator.CreateInstance<T>(), configPath, false, Logger);
                 Logger?.Information?.Log($"Successfully created file '{configPath}'");
-                Logger?.Information?.Log(
-                    $"Please adjust the newly created file '{configPath}' as needed and run again");
+                Logger?.Information?.Log($"Please adjust the newly created file '{configPath}' as needed and run again");
                 throw new ProcessAbortedException();
             }
 

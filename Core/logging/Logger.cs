@@ -14,7 +14,10 @@ namespace ch.wuerth.tobias.mux.Core.logging
 
         protected static String DateTimePrefix
         {
-            get { return $"[{DateTime.Now:s}]"; }
+            get
+            {
+                return $"[{DateTime.Now:s}]";
+            }
         }
 
         public Boolean Log(T obj)

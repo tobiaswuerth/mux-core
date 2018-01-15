@@ -16,7 +16,10 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
 
         public static String LogFilePath
         {
-            get { return Path.Combine(Location.LogsDirectoryPath, $"mux_log_exception-{DateTime.Now:yyyyMMdd}.log"); }
+            get
+            {
+                return Path.Combine(Location.LogsDirectoryPath, $"mux_log_exception-{DateTime.Now:yyyyMMdd}.log");
+            }
         }
 
         protected override Boolean Process(Exception obj)
@@ -26,7 +29,11 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            (String output, Boolean success) res = _processor.Handle(obj, new LoggerBundle {Exception = this});
+            (String output, Boolean success) res = _processor.Handle(obj
+                , new LoggerBundle
+                {
+                    Exception = this
+                });
             if (!res.success)
             {
                 throw new ProcessAbortedException();

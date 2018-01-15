@@ -20,18 +20,17 @@ namespace ch.wuerth.tobias.mux.Core.processor
 
             new List<(String Title, String Value)>
                 {
-                    ("Type      ", ex.GetType().Name),
-                    ("Message   ", ex.Message),
-                    ("Source    ", ex.Source),
-                    ("HelpLink  ", ex.HelpLink),
-                    ("HResult   ", ex.HResult.ToString()),
-                    ("TargetSite", ex.TargetSite?.Name)
+                    ("Type      ", ex.GetType().Name)
+                    , ("Message   ", ex.Message)
+                    , ("Source    ", ex.Source)
+                    , ("HelpLink  ", ex.HelpLink)
+                    , ("HResult   ", ex.HResult.ToString())
+                    , ("TargetSite", ex.TargetSite?.Name)
+                    , ("Stacktrace", $"{Environment.NewLine}{ex.StackTrace}")
                 }.Where(x => !String.IsNullOrWhiteSpace(x.Value))
                 .Select(x => $"{x.Title} : {x.Value.Trim().Replace(Environment.NewLine, "")}{Environment.NewLine}")
                 .ToList()
                 .ForEach(x => sb.Append(x));
-
-            sb.Append($"Stacktrace:{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}");
 
             if (ex.Data?.Count > 0)
             {
