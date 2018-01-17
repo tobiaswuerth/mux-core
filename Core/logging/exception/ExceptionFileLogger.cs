@@ -22,7 +22,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
             }
         }
 
-        protected override Boolean Process(Exception obj, LoggerFlags flags)
+        protected override Boolean Process(Exception obj, LogMessageFlags flags)
         {
             if (null == obj)
             {
@@ -48,7 +48,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
             sb.Append(res.output);
             sb.Append("###### EXCEPTION END ######");
 
-            if (!flags.HasFlag(LoggerFlags.NoNewline))
+            if (!flags.HasFlag(LogMessageFlags.NoNewline))
             {
                 sb.Append(Environment.NewLine);
             }

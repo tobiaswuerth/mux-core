@@ -20,7 +20,7 @@ namespace ch.wuerth.tobias.mux.Core.logging
             }
         }
 
-        public Boolean Log(T obj, LoggerFlags flags = (LoggerFlags) 0)
+        public Boolean Log(T obj, LogMessageFlags flags = (LogMessageFlags) 0)
         {
             try
             {
@@ -33,6 +33,6 @@ namespace ch.wuerth.tobias.mux.Core.logging
             }
         }
 
-        protected abstract Boolean Process(T obj, LoggerFlags flags);
+        protected abstract Boolean Process(T obj, LogMessageFlags flags);
     }
 }

@@ -18,7 +18,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
             }
         }
 
-        protected override Boolean Process(String obj, LoggerFlags flags)
+        protected override Boolean Process(String obj, LogMessageFlags flags)
         {
             if (null == obj)
             {
@@ -30,7 +30,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.information
             sb.Append(" ");
             sb.Append(obj);
 
-            if (!flags.HasFlag(LoggerFlags.NoNewline))
+            if (!flags.HasFlag(LogMessageFlags.NoNewline))
             {
                 sb.Append(Environment.NewLine);
             }
