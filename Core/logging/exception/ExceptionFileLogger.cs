@@ -22,7 +22,7 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
             }
         }
 
-        protected override Boolean Process(Exception obj)
+        protected override Boolean Process(Exception obj, LoggerFlags flags)
         {
             if (null == obj)
             {
@@ -40,12 +40,20 @@ namespace ch.wuerth.tobias.mux.Core.logging.exception
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.Append($"An exception occurred{Environment.NewLine}");
-            sb.Append($"##### EXCEPTION BEGIN #####{Environment.NewLine}");
+            sb.Append(DateTimePrefix);
+            sb.Append("An exception occurred");
+            sb.Append(Environment.NewLine);
+            sb.Append("##### EXCEPTION BEGIN #####");
+            sb.Append(Environment.NewLine);
             sb.Append(res.output);
-            sb.Append($"###### EXCEPTION END ######{Environment.NewLine}");
+            sb.Append("###### EXCEPTION END ######");
 
-            File.AppendAllText(LogFilePath, $"{DateTimePrefix} {sb}");
+            if (!flags.HasFlag(LoggerFlags.NoNewline))
+            {
+                sb.Append(Environment.NewLine);
+            }
+
+            File.AppendAllText(LogFilePath, sb.ToString());
             return true;
         }
     }
