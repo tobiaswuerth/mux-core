@@ -6,7 +6,7 @@ using ch.wuerth.tobias.ProcessPipeline;
 
 namespace ch.wuerth.tobias.mux.Core.processing
 {
-    public class ExceptionProcessor : ProcessSegment<Exception, String>
+    public class ExceptionStringifier : ProcessPipe<Exception, String>
     {
         protected override String OnProcess(Exception ex)
         {

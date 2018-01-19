@@ -4,16 +4,16 @@ using ch.wuerth.tobias.ProcessPipeline;
 
 namespace ch.wuerth.tobias.mux.Core.processing
 {
-    public class LogTypePrefixProcessor : ProcessSegment<String, String>
+    public class LogTypePrefixer : ProcessPipe<dynamic, String>
     {
         private readonly LoggerType _type;
 
-        public LogTypePrefixProcessor(LoggerType type)
+        public LogTypePrefixer(LoggerType type)
         {
             _type = type;
         }
 
-        protected override String OnProcess(String obj)
+        protected override String OnProcess(dynamic obj)
         {
             return $"[{_type}] {obj ?? String.Empty}";
         }

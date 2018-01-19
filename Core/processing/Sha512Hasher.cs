@@ -5,7 +5,7 @@ using ch.wuerth.tobias.ProcessPipeline;
 
 namespace ch.wuerth.tobias.mux.Core.processing
 {
-    public class Sha512Processor : ProcessSegment<String, String>
+    public class Sha512Hasher : ProcessPipe<String, String>
     {
         protected override String OnProcess(String obj)
         {
