@@ -23,6 +23,8 @@ namespace ch.wuerth.tobias.mux.Core.logging
 
         private void Initialize()
         {
+            LoggerBundle.Inform($"Initializing logger of type '{Type}'...");
+
             _prepareLogPipe = new ValidationPipe<Object>(o => o != null) // validate
                 .Connect(new ConditionalPipe<Object, String>(o => o is Exception
                     , new CasterPipe<Object, Exception>().Connect(new ExceptionStringifierPipe())
@@ -33,6 +35,8 @@ namespace ch.wuerth.tobias.mux.Core.logging
             _executeLogPipe = GetExecuteLogPipe();
 
             _isInitialized = true;
+
+            LoggerBundle.Inform($"Done initializing logger of type '{Type}'");
         }
 
         protected abstract ProcessPipe<String, String> GetExecuteLogPipe();

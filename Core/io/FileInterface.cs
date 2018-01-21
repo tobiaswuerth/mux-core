@@ -30,13 +30,22 @@ namespace ch.wuerth.tobias.mux.Core.io
 
             try
             {
+                LoggerBundle.Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine
+                    , $"Trying to serialize obj for file '{path}'...");
                 String text = JsonConvert.SerializeObject(obj);
+                LoggerBundle.Trace("Ok.");
+                LoggerBundle.Trace($"Serialized object for file '{path}' is '{text}'");
                 String pathRoot = Path.GetDirectoryName(path);
                 if (!Directory.Exists(pathRoot))
                 {
+                    LoggerBundle.Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine
+                        , $"Directory '{pathRoot}' does not exist. Trying to create it...");
                     Directory.CreateDirectory(pathRoot);
+                    LoggerBundle.Trace("Ok.");
                 }
+                LoggerBundle.Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine, $"Writing object to file '{path}'...");
                 File.WriteAllText(path, text);
+                LoggerBundle.Trace("Ok.");
                 return true;
             }
             catch (Exception ex)
@@ -62,8 +71,15 @@ namespace ch.wuerth.tobias.mux.Core.io
 
             try
             {
+                LoggerBundle.Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine, $"Trying to read file '{path}'...");
                 String jsonString = File.ReadAllText(path);
+                LoggerBundle.Trace("Ok.");
+                LoggerBundle.Trace($"Serialized object of file '{path}' is '{jsonString}'");
+
+                LoggerBundle.Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine, "Trying to deserialize object...");
                 T obj = JsonConvert.DeserializeObject<T>(jsonString);
+                LoggerBundle.Trace("Ok.");
+
                 return (obj, true);
             }
             catch (Exception ex)
