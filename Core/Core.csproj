@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ch.wuerth.tobias.ProcessPipeline" Version="2.0.0" />
+    <PackageReference Include="ch.wuerth.tobias.ProcessPipeline" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 

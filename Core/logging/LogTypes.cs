@@ -1,6 +1,6 @@
 ﻿namespace ch.wuerth.tobias.mux.Core.logging
 {
-    public enum LoggerType
+    public enum LogTypes
     {
         Trace
         , Debug

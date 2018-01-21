@@ -8,23 +8,23 @@ namespace ch.wuerth.tobias.mux.Core.io
 {
     public static class FileInterface
     {
-        public static Boolean Save<T>(T obj, String path, Boolean doOverride = false, LoggerBundle logger = null) where T : class
+        public static Boolean Save<T>(T obj, String path) where T : class
         {
             if (null == obj)
             {
-                logger?.Exception?.Log(new ArgumentNullException(nameof(obj)));
+                LoggerBundle.Error(new ArgumentNullException(nameof(obj)));
                 return false;
             }
 
             if (null == path)
             {
-                logger?.Exception?.Log(new ArgumentNullException(nameof(path)));
+                LoggerBundle.Error(new ArgumentNullException(nameof(path)));
                 return false;
             }
 
-            if (File.Exists(path) && !doOverride)
+            if (File.Exists(path))
             {
-                logger?.Exception?.Log(new PathOccupiedException());
+                LoggerBundle.Error(new PathOccupiedException());
                 return false;
             }
 
@@ -41,22 +41,22 @@ namespace ch.wuerth.tobias.mux.Core.io
             }
             catch (Exception ex)
             {
-                logger?.Exception?.Log(ex);
+                LoggerBundle.Error(ex);
                 return false;
             }
         }
 
-        public static (T output, Boolean success) Read<T>(String path, LoggerBundle logger = null) where T : class
+        public static (T output, Boolean success) Read<T>(String path) where T : class
         {
             if (null == path)
             {
-                logger?.Exception?.Log(new ArgumentNullException(nameof(path)));
+                LoggerBundle.Error(new ArgumentNullException(nameof(path)));
                 return (null, false);
             }
 
             if (!File.Exists(path))
             {
-                logger?.Exception?.Log(new FileNotFoundException());
+                LoggerBundle.Error(new FileNotFoundException());
                 return (null, false);
             }
 
@@ -68,7 +68,7 @@ namespace ch.wuerth.tobias.mux.Core.io
             }
             catch (Exception ex)
             {
-                logger?.Exception?.Log(ex);
+                LoggerBundle.Error(ex);
                 return (null, false);
             }
         }

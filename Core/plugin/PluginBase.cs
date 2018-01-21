@@ -13,32 +13,30 @@ namespace ch.wuerth.tobias.mux.Core.plugin
     {
         private readonly Dictionary<String, Action> _actions = new Dictionary<String, Action>();
 
-        protected PluginBase(String pluginName, LoggerBundle logger)
+        protected PluginBase(String pluginName)
         {
             Name = pluginName;
-            Logger = logger;
         }
 
         public String Name { get; }
 
         public Boolean IsInitialized { get; set; }
 
-        protected LoggerBundle Logger { get; }
-
         public void RegisterAction(String key, Action action)
         {
             if (action == null)
             {
-                Logger?.Exception?.Log(new ArgumentNullException(nameof(action)));
+                LoggerBundle.Warn(new ArgumentNullException(nameof(action)));
+                return;
             }
 
             if (key == null)
             {
-                Logger?.Exception?.Log(new ArgumentNullException(nameof(key)));
+                LoggerBundle.Warn(new ArgumentNullException(nameof(key)));
                 return;
             }
 
-            _actions[key] = action ?? throw new ArgumentNullException(nameof(action));
+            _actions[key] = action;
         }
 
         public void TriggerActions(List<String> keys)
@@ -50,13 +48,13 @@ namespace ch.wuerth.tobias.mux.Core.plugin
         {
             if (key == null)
             {
-                Logger?.Exception?.Log(new ArgumentNullException(nameof(key)));
+                LoggerBundle.Warn(new ArgumentNullException(nameof(key)));
                 return;
             }
 
             if (!_actions.ContainsKey(key))
             {
-                Logger?.Exception?.Log(new KeyNotFoundException($"No action with name '{key}' found"));
+                LoggerBundle.Debug(new KeyNotFoundException($"No action with name '{key}' found"));
                 return;
             }
 
@@ -73,7 +71,7 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             }
             catch (Exception ex)
             {
-                Logger?.Exception?.Log(ex);
+                LoggerBundle.Error(ex);
             }
 
             return IsInitialized;
@@ -101,19 +99,19 @@ namespace ch.wuerth.tobias.mux.Core.plugin
 
         protected virtual void OnProcessStarting()
         {
-            Logger?.Information?.Log($"A new process of plugin '{Name}' is starting");
+            LoggerBundle.Inform($"A new process of plugin '{Name}' is starting");
         }
 
         protected virtual void OnProcessStopping()
         {
-            Logger?.Information?.Log($"A process of plugin '{Name}' is stopping");
+            LoggerBundle.Inform($"A process of plugin '{Name}' is stopping");
         }
 
         private void OnActionHelp()
         {
             StringBuilder sb = new StringBuilder();
             OnActionHelp(sb);
-            Logger?.Information?.Log(sb.ToString());
+            LoggerBundle.Inform(sb.ToString());
         }
 
         protected virtual void OnActionHelp(StringBuilder sb)
@@ -126,20 +124,20 @@ namespace ch.wuerth.tobias.mux.Core.plugin
             String configPath = Path.Combine(Location.ApplicationDataDirectoryPath, $"mux_config_plugin_{Name}.json");
             if (!File.Exists(configPath))
             {
-                Logger?.Information?.Log($"File '{configPath}' not found. Trying to create it...");
-                FileInterface.Save(Activator.CreateInstance<T>(), configPath, false, Logger);
-                Logger?.Information?.Log($"Successfully created file '{configPath}'");
-                Logger?.Information?.Log($"Please adjust the newly created file '{configPath}' as needed and run again");
+                LoggerBundle.Debug($"File '{configPath}' not found. Trying to create it...");
+                FileInterface.Save(Activator.CreateInstance<T>(), configPath);
+                LoggerBundle.Debug($"Successfully created file '{configPath}'");
+                LoggerBundle.Inform($"Please adjust the newly created file '{configPath}' as needed and run again");
                 throw new ProcessAbortedException();
             }
 
-            (T output, Boolean success) readResult = FileInterface.Read<T>(configPath, Logger);
+            (T output, Boolean success) readResult = FileInterface.Read<T>(configPath);
             if (!readResult.success)
             {
                 throw new ProcessAbortedException();
             }
 
-            Logger?.Information?.Log($"Successfully read configuration file '{configPath}'");
+            LoggerBundle.Trace($"Successfully read configuration file '{configPath}'");
             return readResult.output;
         }
 
