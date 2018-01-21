@@ -8,7 +8,7 @@ namespace ch.wuerth.tobias.mux.Core.processing
 {
     public class ExceptionStringifierPipe : ProcessPipe<Exception, String>
     {
-        protected ExceptionStringifierPipe() : base(exception =>
+        public ExceptionStringifierPipe() : base(exception =>
         {
             if (null == exception)
             {
