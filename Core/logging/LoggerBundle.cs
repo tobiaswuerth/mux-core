@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using ch.wuerth.tobias.mux.Core.logging.logger;
 using global::ch.wuerth.tobias.mux.Core.global;
 
@@ -40,10 +39,7 @@ namespace ch.wuerth.tobias.mux.Core.logging
         private static void LoadConfiguration()
         {
             List<Logger> preInitLoggers = Enum.GetNames(typeof(LogTypes))
-                .Select(x => (Logger) Activator.CreateInstance(typeof(ConsoleLogger)
-                    , BindingFlags.CreateInstance
-                    , null
-                    , Enum.Parse<LogTypes>(x)))
+                .Select(x => Activator.CreateInstance(typeof(ConsoleLogger), Enum.Parse<LogTypes>(x)) as Logger)
                 .ToList();
             preInitLoggers.ForEach(Register);
 
@@ -67,8 +63,7 @@ namespace ch.wuerth.tobias.mux.Core.logging
                     }
 
                     Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine, $"Trying to create instance of type {s}...");
-                    Logger logger =
-                        Activator.CreateInstance(LoggerMapping[s], BindingFlags.CreateInstance, null, pair.Key) as Logger;
+                    Logger logger = Activator.CreateInstance(LoggerMapping[s], pair.Key) as Logger;
                     Trace("Ok.");
                     Trace($"Trying to register logger of type '{s}'...");
                     Register(logger);
