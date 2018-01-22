@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ch.wuerth.tobias.mux.Core.logging;
 
 namespace ch.wuerth.tobias.mux.Core.data
 {
@@ -22,6 +23,8 @@ namespace ch.wuerth.tobias.mux.Core.data
 
         private IEnumerable<String> Crawl(String path)
         {
+            LoggerBundle.Trace($"Starting to crawl path '{path}'");
+            LoggerBundle.Trace($"Working on files in path '{path}'");
             foreach (String file in Directory.EnumerateFiles(path))
             {
                 if (_extensionFilter.Contains(Path.GetExtension(file)))
@@ -30,6 +33,7 @@ namespace ch.wuerth.tobias.mux.Core.data
                 }
             }
 
+            LoggerBundle.Trace($"Working on directories in path '{path}'");
             foreach (String dir in Directory.EnumerateDirectories(path))
             {
                 foreach (String file in Crawl(dir))
