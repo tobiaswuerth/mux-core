@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ch.wuerth.tobias.mux.Core.io;
 using ch.wuerth.tobias.mux.Core.logging.logger;
 using global::ch.wuerth.tobias.mux.Core.global;
 
@@ -40,34 +39,21 @@ namespace ch.wuerth.tobias.mux.Core.logging
 
         private static void LoadConfiguration()
         {
-            List<Logger> preInitLoggers = new List<Logger>
-            {
-                new ConsoleLogger(LogTypes.Debug)
-                , new ConsoleLogger(LogTypes.Info)
-                , new ConsoleLogger(LogTypes.Warning)
-                , new ConsoleLogger(LogTypes.Error)
-                , new ConsoleLogger(LogTypes.Fatal)
-            };
+            List<Logger> preInitLoggers = Enum.GetNames(typeof(LogTypes))
+                .Select(x => (Logger) Activator.CreateInstance(typeof(ConsoleLogger)
+                    , BindingFlags.CreateInstance
+                    , null
+                    , Enum.Parse<LogTypes>(x)))
+                .ToList();
             preInitLoggers.ForEach(Register);
 
-            Debug($"Trying to load logging config from path '{LoggingConfigurationPath}'...");
-
-            if (!File.Exists(LoggingConfigurationPath))
+            LoggingConfig config = Configurator.Request<LoggingConfig>(LoggingConfigurationPath);
+            if (null == config)
             {
-                Trace($"File '{LoggingConfigurationPath}' not found. Trying to save template...");
-                FileInterface.Save(new LoggingConfig(), LoggingConfigurationPath);
-                Trace($"Successfully saved file '{LoggingConfigurationPath}'");
-                Inform(
-                    $"Created file '{LoggingConfigurationPath}'. Changes to the file will take affect after restarting the executable. Adjust as needed.");
+                Warn($"Could not load config file '{LoggingConfigurationPath}'. Continuing with default loggers.");
+                return;
             }
 
-            Trace($"Trying to read config file '{LoggingConfigurationPath}'...");
-            (LoggingConfig config, Boolean success) = FileInterface.Read<LoggingConfig>(LoggingConfigurationPath);
-            if (!success)
-            {
-                Fatal($"Could not load config file '{LoggingConfigurationPath}'. Exiting");
-                Environment.Exit(1);
-            }
             Debug($"Successfully read config file '{LoggingConfigurationPath}'");
 
             Debug("Applying logging config...");
@@ -80,9 +66,13 @@ namespace ch.wuerth.tobias.mux.Core.logging
                         return;
                     }
 
+                    Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine, $"Trying to create instance of type {s}...");
                     Logger logger =
                         Activator.CreateInstance(LoggerMapping[s], BindingFlags.CreateInstance, null, pair.Key) as Logger;
+                    Trace("Ok.");
+                    Trace($"Trying to register logger of type '{s}'...");
                     Register(logger);
+                    Trace($"Registered logger of type '{s}'");
                 }));
             Debug("Logging config applied");
         }

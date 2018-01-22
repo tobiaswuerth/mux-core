@@ -1,8 +1,9 @@
 ﻿using System;
+using ch.wuerth.tobias.mux.Core.logging;
 using ch.wuerth.tobias.ProcessPipeline;
 using ch.wuerth.tobias.ProcessPipeline.pipes;
 
-namespace ch.wuerth.tobias.mux.Core.logging
+namespace ch.wuerth.tobias.mux.Core.processing
 {
     public class LogFlagPipe : ProcessPipe<String, String>
     {

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using ch.wuerth.tobias.mux.Core.exceptions;
-using ch.wuerth.tobias.mux.Core.io;
 using ch.wuerth.tobias.mux.Core.logging;
 using global::ch.wuerth.tobias.mux.Core.global;
 
@@ -65,7 +63,10 @@ namespace ch.wuerth.tobias.mux.Core.plugin
         {
             try
             {
+                LoggerBundle.Trace($"Initializing plugin '{Name}'...");
                 OnInitialize();
+                LoggerBundle.Trace($"Successfully initialized plugin '{Name}'");
+
                 RegisterDefaultActions();
                 IsInitialized = true;
             }
@@ -89,7 +90,8 @@ namespace ch.wuerth.tobias.mux.Core.plugin
         {
             if (!IsInitialized)
             {
-                throw new NotInitializedException();
+                LoggerBundle.Error($"Plugin '{Name}'", new NotInitializedException());
+                return;
             }
 
             OnProcessStarting();
@@ -109,36 +111,18 @@ namespace ch.wuerth.tobias.mux.Core.plugin
 
         private void OnActionHelp()
         {
-            StringBuilder sb = new StringBuilder();
-            OnActionHelp(sb);
-            LoggerBundle.Inform(sb.ToString());
+            LoggerBundle.Inform(GetHelp());
         }
 
-        protected virtual void OnActionHelp(StringBuilder sb)
+        protected virtual String GetHelp()
         {
-            sb.Append($"Plugin '{Name}' has no specific help message defined");
+            return $"Plugin '{Name}' has no specific help message defined";
         }
 
         protected T RequestConfig<T>() where T : class
         {
-            String configPath = Path.Combine(Location.ApplicationDataDirectoryPath, $"mux_config_plugin_{Name}.json");
-            if (!File.Exists(configPath))
-            {
-                LoggerBundle.Debug($"File '{configPath}' not found. Trying to create it...");
-                FileInterface.Save(Activator.CreateInstance<T>(), configPath);
-                LoggerBundle.Debug($"Successfully created file '{configPath}'");
-                LoggerBundle.Inform($"Please adjust the newly created file '{configPath}' as needed and run again");
-                throw new ProcessAbortedException();
-            }
-
-            (T output, Boolean success) readResult = FileInterface.Read<T>(configPath);
-            if (!readResult.success)
-            {
-                throw new ProcessAbortedException();
-            }
-
-            LoggerBundle.Trace($"Successfully read configuration file '{configPath}'");
-            return readResult.output;
+            String path = Path.Combine(Location.ApplicationDataDirectoryPath, $"mux_config_plugin_{Name}.json");
+            return Configurator.Request<T>(path);
         }
 
         protected virtual void OnInitialize() { }
