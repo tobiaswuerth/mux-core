@@ -1,10 +1,17 @@
+using ch.wuerth.tobias.mux.Core.logging;
+using ch.wuerth.tobias.mux.Core.logging.logger;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Core.Test
+namespace ch.wuerth.tobias.mux.Core.Test
 {
-    [TestClass]
+    [ TestClass ]
     public class Tests
     {
-
+        [ TestMethod ]
+        public void TestLoggerBundle()
+        {
+            // to allow for static constructor to be invoked
+            LoggerBundle.Register(new ConsoleLogger(LogTypes.Trace));
+        }
     }
 }
