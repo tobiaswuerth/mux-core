@@ -7,7 +7,7 @@ namespace ch.wuerth.tobias.mux.Core.processing
 {
     public class Sha512HashPipe : ProcessPipe<String, String>
     {
-        protected Sha512HashPipe() : base(o =>
+        public Sha512HashPipe() : base(o =>
         {
             using (SHA512 shaM = new SHA512Managed())
             {
