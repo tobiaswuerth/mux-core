@@ -1,4 +1,5 @@
 ﻿using System;
+using ch.wuerth.tobias.mux.Core.logging;
 
 namespace ch.wuerth.tobias.mux.Core.Test
 {
@@ -6,7 +7,13 @@ namespace ch.wuerth.tobias.mux.Core.Test
     {
         private static void Main(String[] args)
         {
-            Console.WriteLine("Hello World!");
+            // mainly for debugging
+            LoggerBundle.Trace("TEST");
+            LoggerBundle.Debug("TEST");
+            LoggerBundle.Inform("TEST");
+            LoggerBundle.Warn(new Exception());
+            LoggerBundle.Error(new Exception());
+            LoggerBundle.Fatal(new Exception());
         }
     }
 }

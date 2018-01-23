@@ -64,7 +64,7 @@ namespace ch.wuerth.tobias.mux.Core.logging
 
                     Trace(Logger.DefaultLogFlags & ~LogFlags.SuffixNewLine, $"Trying to create instance of type {s}...");
                     Logger logger = Activator.CreateInstance(LoggerMapping[s], pair.Key) as Logger;
-                    Trace("Ok.");
+                    Trace(Logger.DefaultLogFlags & ~LogFlags.PrefixLoggerType & ~LogFlags.PrefixTimeStamp, "Ok.");
                     Trace($"Trying to register logger of type '{s}'...");
                     Register(logger);
                     Trace($"Registered logger of type '{s}'");
