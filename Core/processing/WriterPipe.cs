@@ -10,24 +10,26 @@ namespace ch.wuerth.tobias.mux.Core.processing
 
         public WriterPipe(TextWriter stream) : base(o =>
         {
-            stream?.Write(o ?? String.Empty);
+            stream.Write(o ?? String.Empty);
+            stream.Flush();
             return o;
         })
         {
-            _stream = stream;
+            _stream = stream ?? throw new ArgumentNullException(nameof(stream));
         }
 
         public void Dispose()
         {
             try
             {
+                _stream?.Flush();
+                _stream?.Close();
                 _stream?.Dispose();
             }
             catch (Exception)
             {
                 // ignore
             }
-            ;
         }
 
         ~WriterPipe()

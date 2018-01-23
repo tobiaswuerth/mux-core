@@ -9,45 +9,37 @@ namespace ch.wuerth.tobias.mux.Core.logging
     public abstract class Logger
     {
         public static LogFlags DefaultLogFlags = LogFlags.PrefixLoggerType | LogFlags.PrefixTimeStamp | LogFlags.SuffixNewLine;
-        private ProcessPipe<String, String> _executeLogPipe;
 
-        private Boolean _isInitialized;
-        private ProcessPipe<Object, String> _prepareLogPipe;
+        private readonly ProcessPipe<Object, String> _prepareLogPipe = new ValidationPipe<Object>(o => o != null) // validate
+            .Connect(new ConditionalPipe<Object, String>(o => o is Exception
+                , new CasterPipe<Object, Exception>().Connect(new ExceptionStringifierPipe())
+                , new ProcessPipe<Object, String>(o => o.ToString()))) // object -> string
+            .Connect(new ValidationPipe<String>(o => !String.IsNullOrWhiteSpace(o))) // validate
+            .Connect(new ProcessPipe<String, String>(s => s.Trim())); // trim
+
+        private ProcessPipe<String, String> _executeLogPipe;
 
         protected Logger(LogTypes type)
         {
             Type = type;
+            Initialize();
         }
 
         public LogTypes Type { get; }
 
         private void Initialize()
         {
-            LoggerBundle.Inform($"Initializing logger of type '{Type}'...");
-
-            _prepareLogPipe = new ValidationPipe<Object>(o => o != null) // validate
-                .Connect(new ConditionalPipe<Object, String>(o => o is Exception
-                    , new CasterPipe<Object, Exception>().Connect(new ExceptionStringifierPipe())
-                    , new ProcessPipe<Object, String>(o => o.ToString()))) // object -> string
-                .Connect(new ValidationPipe<String>(o => !String.IsNullOrWhiteSpace(o))) // validate
-                .Connect(new ProcessPipe<String, String>(s => s.Trim())); // trim
+            LoggerBundle.Debug($"Initializing logger of type '{Type}'...");
 
             _executeLogPipe = GetExecuteLogPipe();
 
-            _isInitialized = true;
-
-            LoggerBundle.Inform($"Done initializing logger of type '{Type}'");
+            LoggerBundle.Inform($"Logger of type '{Type}' successfully initialized");
         }
 
         protected abstract ProcessPipe<String, String> GetExecuteLogPipe();
 
         public void Log(LogFlags flags, params Object[] args)
         {
-            if (!_isInitialized)
-            {
-                Initialize();
-            }
-
             StringBuilder sb = new StringBuilder();
             ProcessPipe<Object, String> preparePipe = _prepareLogPipe.Connect(new LogFlagPipe(Type, flags));
 
