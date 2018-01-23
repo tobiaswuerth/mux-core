@@ -15,7 +15,7 @@ namespace ch.wuerth.tobias.mux.Core.processing
             , "yyyy"
         };
 
-        protected DateTimeParserPipe() : base(o =>
+        public DateTimeParserPipe() : base(o =>
         {
             DateTime dateTime = DateTime.MinValue;
             return DateTimePatterns.Any(p
